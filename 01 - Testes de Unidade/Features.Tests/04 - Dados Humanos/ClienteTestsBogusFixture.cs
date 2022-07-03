@@ -38,7 +38,7 @@ namespace Features.Tests
             //clientefaker.RuleFor(c => c.Nome, (f, c) => f.Name.FirstName());
 
             var clientes = new Faker<Cliente>("pt_BR")
-                .CustomInstantiator(f => new Cliente(
+                .CustomInstantiator(f => new Cliente( //CustomInstantiator -> usar o construtor da classe
                     Guid.NewGuid(), 
                     f.Name.FirstName(genero),
                     f.Name.LastName(genero),

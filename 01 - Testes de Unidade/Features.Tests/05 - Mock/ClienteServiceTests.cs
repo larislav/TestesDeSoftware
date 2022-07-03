@@ -24,17 +24,17 @@ namespace Features.Tests
             // Arrange
             var cliente = _clienteTestsBogus.GerarClienteValido();
             var clienteRepo = new Mock<IClienteRepository>();
-            var mediatr = new Mock<IMediator>();
-
-            var clienteService = new ClienteService(clienteRepo.Object, mediatr.Object);
+            var mediator = new Mock<IMediator>();
+            var clienteService = new ClienteService(clienteRepo.Object, mediator.Object);
 
             // Act
             clienteService.Adicionar(cliente);
 
             // Assert
             Assert.True(cliente.EhValido());
-            clienteRepo.Verify(r => r.Adicionar(cliente),Times.Once);
-            mediatr.Verify(m=>m.Publish(It.IsAny<INotification>(),CancellationToken.None),Times.Once);
+            clienteRepo.Verify(r => r.Adicionar(cliente), Times.Once);
+            mediator.Verify(m => m.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+           
         }
 
         [Fact(DisplayName = "Adicionar Cliente com Falha")]
@@ -63,20 +63,22 @@ namespace Features.Tests
         {
             // Arrange
             var clienteRepo = new Mock<IClienteRepository>();
-            var mediatr = new Mock<IMediator>();
+            var mediator = new Mock<IMediator>();
 
+            //Setup = ensinar um método a fazer alguma coisa conforme quero
             clienteRepo.Setup(c => c.ObterTodos())
                 .Returns(_clienteTestsBogus.ObterClientesVariados());
 
-            var clienteService = new ClienteService(clienteRepo.Object, mediatr.Object);
+            var clienteService = new ClienteService(clienteRepo.Object, mediator.Object);
+
 
             // Act
             var clientes = clienteService.ObterTodosAtivos();
 
             // Assert 
-            clienteRepo.Verify(r => r.ObterTodos(), Times.Once);
-            Assert.True(clientes.Any());
-            Assert.False(clientes.Count(c=>!c.Ativo) > 0);
+            clienteRepo.Verify(expression: r => r.ObterTodos(), Times.Once);
+            Assert.True(clientes.Count() > 0);
+            Assert.False(clientes.Count(c=> !c.Ativo) > 0);
         }
     }
 }

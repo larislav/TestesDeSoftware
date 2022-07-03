@@ -25,7 +25,7 @@ namespace Features.Tests
             // Arrange
             var cliente = _clienteTestsBogus.GerarClienteValido();
             var mocker = new AutoMocker();
-            var clienteService = mocker.CreateInstance<ClienteService>();
+            var clienteService = mocker.CreateInstance<ClienteService>(); // deve ser a classe concreta
 
             // Act
             clienteService.Adicionar(cliente);
